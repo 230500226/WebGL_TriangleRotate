@@ -1,6 +1,3 @@
-Sure, here's a draft of a README file for your GitHub project:
-
-```markdown
 # Triangle Rotate Matrix
 
 This project demonstrates how to rotate a triangle using a matrix with buttons and keypresses.
@@ -44,4 +41,3 @@ In the `triangleRotateMatrix.js` file, we perform the following steps:
 ## Conclusion
 
 This project is a great way to learn about matrix transformations and how they can be used to create complex animations in a simple and efficient way. Enjoy rotating triangles!
-```
