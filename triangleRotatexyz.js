@@ -16,17 +16,19 @@ function mainFunction(){
         return;
     }
     
+    // Define the vertices for the triangle
+    const verticesTriangle =[
+        0.0,0.5,
+        -0.5,-0.5,
+        0.5,-0.5
+    ];
+
     // Get context for webgl
     const gl = canvas.getContext("webgl2");
     if (!gl){
         showError("Can't find webgl2 support");
         return;
     }
-
-    // Initialise rotation toggle button values
-    let rotateX = false;
-    let rotateY = false;
-    let rotateZ = false;
 
     //  Shader source code
     const vSSC = `#version 300 es
@@ -110,13 +112,6 @@ function mainFunction(){
         return;
     }
 
-    // Define the vertices for the triangle
-    const verticesTriangle =[
-        0.0,0.5,
-        -0.5,-0.5,
-        0.5,-0.5
-    ];
-
     // Create the buffer for the triangle
     const bufferTriangle = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, bufferTriangle);
@@ -124,6 +119,9 @@ function mainFunction(){
     gl.enableVertexAttribArray(position);
 
     // Create direction and position logic
+    canvas.width = canvas.clientWidth;
+    canvas.height = canvas.clientHeight;
+
     const canvasSizePixels = Math.min(canvas.width, canvas.height);
 
     const sizeClipSpaceTriangle = 0.9;
@@ -134,8 +132,10 @@ function mainFunction(){
     const animDirectionTriangle = {x: speed * Math.cos(angle), y: speed * Math.sin(angle)};
     const animPositionTriangle = {x:canvas.width / 2, y:canvas.height / 2};
 
-    canvas.width = canvas.clientWidth;
-    canvas.height = canvas.clientHeight;
+    // Initialise rotation toggle button values
+    let rotateX = false;
+    let rotateY = false;
+    let rotateZ = false;
 
     var rotationAngleX = 0.0;
     var rotationAngleY = 0.0;
@@ -156,13 +156,14 @@ function mainFunction(){
         const uRotationX = gl.getUniformLocation(programTriangle, 'uRotationX');
         const uRotationY = gl.getUniformLocation(programTriangle, 'uRotationY');
         const uRotationZ = gl.getUniformLocation(programTriangle, 'uRotationZ');
+
         gl.uniform1f(uRotationX, rotationAngleX);
         gl.uniform1f(uRotationY, rotationAngleY);
         gl.uniform1f(uRotationZ, rotationAngleZ);
         gl.clearColor(0.3, 0.3, 0.3, 1);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-        // Draw the triangle
+        // Draw the triangle needed if there are multiple models / shapes to draw each using a separate program
         gl.useProgram(programTriangle);
 
         const clipXTriangle = (animPositionTriangle.x / canvas.width) * 2 - 1;
