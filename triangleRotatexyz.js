@@ -8,24 +8,27 @@ function showError(errorText) {
 }
 
 function mainFunction(){
-
+    
+    // Get canvas
     const canvas = document.getElementById("IDcanvas");
     if (!canvas){
         showError("Can't find canvas reference");
         return;
     }
-
+    
+    // Get context for webgl
     const gl = canvas.getContext("webgl2");
     if (!gl){
         showError("Can't find webgl2 support");
         return;
     }
 
+    // Initialise rotation toggle button values
     let rotateX = false;
     let rotateY = false;
     let rotateZ = false;
 
-    //  shader source code
+    //  Shader source code
     const vSSC = `#version 300 es
         precision mediump float;
         in vec3 vertexPosition;
@@ -57,11 +60,13 @@ function mainFunction(){
             gl_Position = vec4(uPosition + finalPosition.xy, 0.0, 1.0);
         }
     `;
-
+    
+    // Create vertex shader
     const vertexShader = gl.createShader(gl.VERTEX_SHADER);
     gl.shaderSource(vertexShader, vSSC);
     gl.compileShader(vertexShader);
 
+    // Error checking vertex shader
     if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)){
         const errorMessage = gl.getShaderInfoLog(vertexShader);
         showError('Compile vertex error: ' + errorMessage);
@@ -76,6 +81,7 @@ function mainFunction(){
         outColor = vec4(0.0, 1.0, 0.0, 1.0); // Neon green color
     }`;
 
+    // Create fragment shader
     const fragmentShaderNeonGreen = gl.createShader(gl.FRAGMENT_SHADER);
     gl.shaderSource(fragmentShaderNeonGreen, fSSCNeonGreen);
     gl.compileShader(fragmentShaderNeonGreen);
@@ -97,6 +103,7 @@ function mainFunction(){
         return;
     }
 
+    // Get attribLocation of vertexPosition initial position
     const position = gl.getAttribLocation(programTriangle, "vertexPosition");
     if (position < 0) {
         showError(`Failed to get attribute location for vertexPosition`);
@@ -123,7 +130,7 @@ function mainFunction(){
     const sizePixelsTriangle = sizeClipSpaceTriangle * canvasSizePixels / 2;
     var positionUniformTriangle = gl.getUniformLocation(programTriangle, 'uPosition');
     const angle = Math.random() * 2 * Math.PI;
-    const speed = 0.6; // Adjust this value to change the speed
+    const speed = 0.0; // Adjust this value to change the speed
     const animDirectionTriangle = {x: speed * Math.cos(angle), y: speed * Math.sin(angle)};
     const animPositionTriangle = {x:canvas.width / 2, y:canvas.height / 2};
 
@@ -134,6 +141,7 @@ function mainFunction(){
     var rotationAngleY = 0.0;
     var rotationAngleZ = 0.0;
     function draw() {
+        
         // Toggle rotations
         if (rotateX){
             rotationAngleX += 0.01;
